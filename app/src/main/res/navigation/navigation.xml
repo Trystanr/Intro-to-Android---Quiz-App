@@ -30,10 +30,12 @@
         tools:layout="@layout/fragment_game" >
         <action
             android:id="@+id/action_gameFragment_to_gameWonFragment"
-            app:destination="@id/gameWonFragment" />
+            app:destination="@id/gameWonFragment"
+            app:popUpTo="@id/homeFragment" />
         <action
             android:id="@+id/action_gameFragment_to_gameLostFragment"
-            app:destination="@id/gameLostFragment" />
+            app:destination="@id/gameLostFragment"
+            app:popUpTo="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/gameWonFragment"

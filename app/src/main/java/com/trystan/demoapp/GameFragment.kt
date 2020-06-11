@@ -1,23 +1,29 @@
 package com.trystan.demoapp
 
+import android.content.res.ColorStateList
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RadioButton
-import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
+import com.bumptech.glide.Glide
 import com.trystan.demoapp.databinding.FragmentGameBinding
+
 
 /**
  * A simple [Fragment] subclass.
  */
 class GameFragment : Fragment() {
+
+    private val viewModel: GameViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,21 +31,43 @@ class GameFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 //        return inflater.inflate(R.layout.fragment_game, container, false)
-        val viewModel:GameViewModel by viewModels()
+
         val binding: FragmentGameBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_game, container, false)
 
         viewModel.score.observe( viewLifecycleOwner, Observer { newScore ->
             binding.score.text = "Score: $newScore"
+
         })
+
+        viewModel.currentCategory.observe( viewLifecycleOwner, Observer { newCategory ->
+            binding.categoryName.text = newCategory
+        })
+
+
+
+        val colorStateList = ColorStateList(
+            arrayOf(
+                intArrayOf(android.R.attr.state_enabled),
+                intArrayOf(android.R.attr.state_enabled)
+            ), intArrayOf(
+                R.color.colorPrimary, //disabled
+                R.color.colorText
+            )
+        )
+
+
 
         viewModel.question.observe( viewLifecycleOwner, Observer { newQuestion ->
             binding.question.text = newQuestion.question
 
+            Glide.with(this).load(Uri.parse("file:///android_asset/${newQuestion.image}")).into(binding.imageView2)
 
             var rGroup = binding.radioGroup
             rGroup.removeAllViews()
             for ((index, answer) in newQuestion.answers.withIndex()) {
                 var newRdbtn = createRadioButton(answer, index)
+                newRdbtn.setTextColor(resources.getColor(R.color.colorText))
+                newRdbtn.buttonTintList = colorStateList
                 rGroup.addView(newRdbtn)
             }
         })
@@ -49,7 +77,7 @@ class GameFragment : Fragment() {
 
             viewModel.checkQuestion(id)
 
-            Toast.makeText(context, "This is the ID: ${id}", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(context, "This is the ID: ${id}", Toast.LENGTH_SHORT).show()
 
             if (viewModel.currentQuestion.value!! < viewModel.amountOfQuestion.value!!.minus(1)) {
                 viewModel.updateQuestion(viewModel.currentQuestion.value ?: 0)
@@ -58,7 +86,8 @@ class GameFragment : Fragment() {
                 if (viewModel.score.value!! == viewModel.amountOfQuestion.value!!) {
                     view.findNavController().navigate(R.id.action_gameFragment_to_gameWonFragment)
                 } else {
-                    view.findNavController().navigate(R.id.action_gameFragment_to_gameLostFragment)
+                    val bundle = bundleOf("amount" to 66)
+                    view.findNavController().navigate(R.id.action_gameFragment_to_gameLostFragment, bundle)
                 }
             }
 

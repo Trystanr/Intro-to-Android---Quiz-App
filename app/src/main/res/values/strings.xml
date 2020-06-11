@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">DemoApp</string>
+    <string name="app_name">Soccer Quiz</string>
     <string name="play_button">Play</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="game_fragment">Home Screen</string>
+    <string name="game_fragment">Select a league</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="game_question">This is where the question will be?</string>

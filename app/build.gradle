@@ -49,4 +49,7 @@ dependencies {
     implementation "android.arch.navigation:navigation-ui-ktx:$version_navigation"
     // Fragment
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
+    // Import Glide
+    implementation "com.github.bumptech.glide:glide:$version_glide"
+    kapt "com.github.bumptech.glide:compiler:$version_glide"
 }
