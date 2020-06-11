@@ -27,5 +27,22 @@
         android:id="@+id/gameFragment"
         android:name="com.trystan.demoapp.GameFragment"
         android:label="fragment_game"
-        tools:layout="@layout/fragment_game" />
+        tools:layout="@layout/fragment_game" >
+        <action
+            android:id="@+id/action_gameFragment_to_gameWonFragment"
+            app:destination="@id/gameWonFragment" />
+        <action
+            android:id="@+id/action_gameFragment_to_gameLostFragment"
+            app:destination="@id/gameLostFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/gameWonFragment"
+        android:name="com.trystan.demoapp.GameWonFragment"
+        android:label="fragment_game_won"
+        tools:layout="@layout/fragment_game_won" />
+    <fragment
+        android:id="@+id/gameLostFragment"
+        android:name="com.trystan.demoapp.GameLostFragment"
+        android:label="fragment_game_lost"
+        tools:layout="@layout/fragment_game_lost" />
 </navigation>
