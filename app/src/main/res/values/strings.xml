@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">DemoApp</string>
+    <string name="play_button">Play</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="game_fragment">Home Screen</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="game_question">THis is where the question will be?</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
