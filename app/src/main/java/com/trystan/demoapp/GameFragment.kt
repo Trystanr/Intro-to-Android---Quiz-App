@@ -1,6 +1,7 @@
 package com.trystan.demoapp
 
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -29,9 +30,6 @@ class GameFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_game, container, false)
-
         val binding: FragmentGameBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_game, container, false)
 
         viewModel.score.observe( viewLifecycleOwner, Observer { newScore ->
@@ -43,20 +41,6 @@ class GameFragment : Fragment() {
             binding.categoryName.text = newCategory
         })
 
-
-
-        val colorStateList = ColorStateList(
-            arrayOf(
-                intArrayOf(android.R.attr.state_enabled),
-                intArrayOf(android.R.attr.state_enabled)
-            ), intArrayOf(
-                R.color.colorPrimary, //disabled
-                R.color.colorText
-            )
-        )
-
-
-
         viewModel.question.observe( viewLifecycleOwner, Observer { newQuestion ->
             binding.question.text = newQuestion.question
 
@@ -66,8 +50,6 @@ class GameFragment : Fragment() {
             rGroup.removeAllViews()
             for ((index, answer) in newQuestion.answers.withIndex()) {
                 var newRdbtn = createRadioButton(answer, index)
-                newRdbtn.setTextColor(resources.getColor(R.color.colorText))
-                newRdbtn.buttonTintList = colorStateList
                 rGroup.addView(newRdbtn)
             }
         })
@@ -75,19 +57,21 @@ class GameFragment : Fragment() {
         binding.submitButton.setOnClickListener { view: View ->
             val id = binding.radioGroup.checkedRadioButtonId
 
-            viewModel.checkQuestion(id)
+            // Make sure that a radio button has been selected
+            if (id != -1) {
 
-//            Toast.makeText(context, "This is the ID: ${id}", Toast.LENGTH_SHORT).show()
+                viewModel.checkQuestion(id)
 
-            if (viewModel.currentQuestion.value!! < viewModel.amountOfQuestion.value!!.minus(1)) {
-                viewModel.updateQuestion(viewModel.currentQuestion.value ?: 0)
-            } else {
-
-                if (viewModel.score.value!! == viewModel.amountOfQuestion.value!!) {
-                    view.findNavController().navigate(R.id.action_gameFragment_to_gameWonFragment)
+                if (viewModel.currentQuestion.value!! < viewModel.amountOfQuestion.value!!.minus(1)) {
+                    viewModel.updateQuestion(viewModel.currentQuestion.value ?: 0)
                 } else {
-                    val bundle = bundleOf("amount" to 66)
-                    view.findNavController().navigate(R.id.action_gameFragment_to_gameLostFragment, bundle)
+
+                    if (viewModel.score.value!! == viewModel.amountOfQuestion.value!!) {
+                        view.findNavController().navigate(R.id.action_gameFragment_to_gameWonFragment)
+                    } else {
+                        val bundle = bundleOf("amount" to 66)
+                        view.findNavController().navigate(R.id.action_gameFragment_to_gameLostFragment, bundle)
+                    }
                 }
             }
 
@@ -97,6 +81,14 @@ class GameFragment : Fragment() {
     }
 
     private fun createRadioButton(answer: String, id: Int):RadioButton {
+        val colorstatelist = ColorStateList(
+            arrayOf(
+                intArrayOf(-android.R.attr.state_enabled),
+                intArrayOf(android.R.attr.state_enabled)
+            ),
+            intArrayOf(Color.GRAY, Color.WHITE)
+        )
+
         val rdb = RadioButton(context)
 
         rdb.layoutParams = LinearLayout.LayoutParams(
@@ -105,6 +97,8 @@ class GameFragment : Fragment() {
         )
         rdb.text = answer
         rdb.id = id
+        rdb.setTextColor(resources.getColor(R.color.colorText))
+        rdb.buttonTintList = colorstatelist
 
         return rdb
     }
